@@ -59,10 +59,10 @@ const Game = {
         s.roundMaxHp= c.hp;
         s.seqIdx    = 0;
 
-        // reset jogadores
+        // reset COMPLETO dos jogadores — HP, itens zerados, status limpos
         ['player','ai'].forEach(k=>{
             s[k].hp        = c.hp;
-            s[k].items     = [];
+            s[k].items     = [];       // <-- ZERA TODOS OS ITENS
             s[k].sawActive = false;
             s[k].cuffed    = false;
             s[k].knownNext = null;
@@ -79,8 +79,15 @@ const Game = {
         UI.setStatus('ai','');
         UI.hideReveal();
 
+        // Limpa o inventário visual imediatamente
+        UI.clearItems();
+
         UI.log(`══════════ RODADA ${n} ══════════`,'log-sys');
         UI.log(`HP inicial: ${c.hp} para cada lado.`,'log-info');
+
+        if(c.items === 0){
+            UI.log('Nenhum item nesta rodada.','log-sys');
+        }
 
         this._loadChamber();
         this._giveItems();
@@ -125,7 +132,11 @@ const Game = {
        ========================== */
     _giveItems(){
         const cnt = this.cfg[this.state.round].items;
-        if(cnt<=0){ UI.updateItems([],null,false); return; }
+        if(cnt<=0){
+            // Sem itens nesta rodada — garante visual limpo
+            UI.updateItems([],null,false);
+            return;
+        }
 
         const pNew = ItemSystem.generateRandom(cnt);
         const aNew = ItemSystem.generateRandom(cnt);
@@ -357,6 +368,24 @@ const Game = {
         let winner;
         if(s.player.hp<=0){ winner='ai';     s.aWins++; UI.log(`☠ Você caiu na Rodada ${s.round}.`,'log-dmg'); }
         else               { winner='player'; s.pWins++; UI.log(`🏆 Rodada ${s.round} vencida!`,'log-player'); }
+
+        // === ZERAR ITENS DE AMBOS AO FIM DA RODADA ===
+        s.player.items = [];
+        s.ai.items     = [];
+        s.player.sawActive = false;
+        s.ai.sawActive     = false;
+        s.player.cuffed    = false;
+        s.ai.cuffed        = false;
+        s.player.knownNext = null;
+        s.ai.knownNext     = null;
+
+        // Limpa visual dos itens
+        UI.clearItems();
+        UI.setStatus('player','');
+        UI.setStatus('ai','');
+        UI.hideReveal();
+
+        UI.log('Itens descartados. Nova rodada com inventário limpo.','log-sys');
 
         if(s.round>=3){
             setTimeout(()=>this._endGame(),1400);
