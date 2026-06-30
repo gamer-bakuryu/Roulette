@@ -121,7 +121,7 @@ const UI = {
     /* ---- itens ---- */
     updateItems(items, onUse, enabled){
         this.el.pItems.innerHTML = '';
-        if(!items.length){
+        if(!items || !items.length){
             const s=document.createElement('span');
             s.style.cssText='color:var(--txt3);font-size:.65rem';
             s.textContent='Sem itens';
@@ -138,6 +138,15 @@ const UI = {
             b.addEventListener('click',()=>{ if(!b.disabled && onUse) onUse(i); });
             this.el.pItems.appendChild(b);
         });
+    },
+
+    /* ---- limpar itens (novo método) ---- */
+    clearItems(){
+        this.el.pItems.innerHTML = '';
+        const s=document.createElement('span');
+        s.style.cssText='color:var(--txt3);font-size:.65rem';
+        s.textContent='Sem itens';
+        this.el.pItems.appendChild(s);
     },
 
     /* ---- log ---- */
