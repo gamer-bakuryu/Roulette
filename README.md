@@ -1,28 +1,37 @@
-# 🎯 Roleta de Cartuchos - Jogo de Turnos
+# ◉ ROULETTE
 
-Jogo web interativo baseado em turnos para dois jogadores contra um oponente controlado pela IA.
+Jogo web interativo baseado em turnos contra uma IA. Sobreviva a 3 rodadas usando sorte, estratégia e itens.
 
 ## Como Jogar
 
 1. Acesse via GitHub Pages
-2. Clique em "Iniciar Jogo"
-3. Use os botões para escolher suas ações a cada turno
-4. Derrote a IA ao longo de 3 rodadas!
+2. Clique em "INICIAR JOGO"
+3. Cada rodada carrega cartuchos no dispositivo
+4. Escolha: atirar no Dealer ou em si mesmo
+5. Use itens estrategicamente
+6. Vença 3 rodadas para sobreviver
 
 ## Regras
 
-- **Cartucho Vermelho**: causa ano
+- **Cartucho Vermelho**: causa dano e encerra o turno
 - **Cartucho Azul**: inofensivo
-- Ativar azul em si mesmo = joga novamente
-- Ativar vermelho = causa 1 de dano e encerra o turno
-- Use itens estrategicamente para vencer!
+- Atirar azul em si mesmo = joga novamente
+- Rodada 1: 2 HP | Rodada 2: 4 HP | Rodada 3: 6 HP
+
+## Itens
+
+| Item | Efeito |
+|------|--------|
+| 🔪 Serra | Próximo tiro causa +1 dano extra |
+| 🚬 Cigarro | Recupera 1 HP |
+| 🔍 Lupa | Revela o próximo cartucho |
+| ⛓ Algemas | Oponente perde o próximo turno |
+| ⚡ Energético | Remove o cartucho atual sem efeito |
 
 ## Hospedagem
 
-Este projeto funciona 100% no GitHub Pages. Basta ativar o Pages nas configurações do repositório apontando para a branch `main`.
+100% GitHub Pages. Ative nas configurações do repositório → Pages → Branch: main → Save.
 
 ## Tecnologias
 
-- HTML5
-- CSS3
-- JavaScript Vanilla (sem dependências externas)
+HTML5 · CSS3 · JavaScript Vanilla — Zero dependências externas.
