@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ROULETTE</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- ============ TELA INICIAL ============ -->
+    <div id="screen-start" class="screen active">
+        <div class="start-container">
+            <div class="title-block">
+                <div class="title-device">
+                    <div class="barrel">
+                        <div class="barrel-hole"></div>
+                    </div>
+                </div>
+                <h1 class="game-title">ROULETTE</h1>
+                <div class="title-divider"></div>
+                <p class="subtitle">SORTE · ESTRATÉGIA · SOBREVIVÊNCIA</p>
+            </div>
+            <div class="start-buttons">
+                <button id="btn-start" class="btn-primary btn-large pulse-glow">
+                    INICIAR JOGO
+                </button>
+                <button id="btn-rules" class="btn-ghost">
+                    COMO JOGAR
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============ TELA DE REGRAS ============ -->
+    <div id="screen-rules" class="screen">
+        <div class="rules-container">
+            <h2 class="rules-title">COMO JOGAR</h2>
+            <div class="rules-content">
+                <div class="rule-block">
+                    <div class="rule-header">OBJETIVO</div>
+                    <p>Reduza o HP do Dealer a zero. Sobreviva às 3 rodadas.</p>
+                </div>
+                <div class="rule-block">
+                    <div class="rule-header">CARTUCHOS</div>
+                    <p><span class="c-red">● VERMELHO</span> — Causa dano. Encerra o turno.</p>
+                    <p><span class="c-blue">● AZUL</span> — Inofensivo.</p>
+                    <p>Usar azul em si mesmo → joga novamente.</p>
+                </div>
+                <div class="rule-block">
+                    <div class="rule-header">RODADAS</div>
+                    <p>Rodada 1 → 2 HP · Rodada 2 → 4 HP · Rodada 3 → 6 HP</p>
+                    <p>Cada rodada possui reabastecimentos automáticos de cartuchos.</p>
+                </div>
+                <div class="rule-block">
+                    <div class="rule-header">ITENS</div>
+                    <div class="rule-item"><span>🔪</span> <strong>Serra</strong> — Próximo tiro causa +1 dano</div>
+                    <div class="rule-item"><span>🚬</span> <strong>Cigarro</strong> — Recupera 1 HP</div>
+                    <div class="rule-item"><span>🔍</span> <strong>Lupa</strong> — Revela o próximo cartucho</div>
+                    <div class="rule-item"><span>⛓️</span> <strong>Algemas</strong> — Oponente perde o próximo turno</div>
+                    <div class="rule-item"><span>⚡</span> <strong>Energético</strong> — Remove o cartucho atual</div>
+                    <p class="rule-note">Rodada 1: sem itens · Rodada 2: 2 itens · Rodada 3: 4 itens</p>
+                </div>
+            </div>
+            <button id="btn-back-start" class="btn-ghost">
+                ← VOLTAR
+            </button>
+        </div>
+    </div>
+
+    <!-- ============ TELA DO JOGO ============ -->
+    <div id="screen-game" class="screen">
+        <div class="game-container">
+
+            <!-- Header -->
+            <header class="game-header">
+                <div class="header-cell">
+                    <div class="header-label">RODADA</div>
+                    <div class="header-value"><span id="round-number">1</span>/3</div>
+                </div>
+                <div class="header-cell header-chamber">
+                    <div class="header-label">CÂMARA</div>
+                    <div id="chamber-visual" class="chamber-row"></div>
+                </div>
+                <div class="header-cell">
+                    <div class="header-label">PLACAR</div>
+                    <div class="header-value" id="score-display">0 — 0</div>
+                </div>
+            </header>
+
+            <!-- Arena -->
+            <section class="arena">
+                <!-- Jogador -->
+                <div class="fighter-card" id="player-card">
+                    <div class="fighter-tag">VOCÊ</div>
+                    <div class="fighter-hp">
+                        <div class="hp-bar"><div class="hp-fill" id="player-hp-fill"></div></div>
+                        <div class="hp-num" id="player-hp-text">2/2</div>
+                    </div>
+                    <div class="fighter-status" id="player-status"></div>
+                </div>
+
+                <!-- Centro -->
+                <div class="arena-center">
+                    <div class="device" id="device-visual">
+                        <div class="device-body">
+                            <div class="device-barrel"></div>
+                        </div>
+                    </div>
+                    <div class="turn-label" id="turn-indicator">SUA VEZ</div>
+                </div>
+
+                <!-- Dealer -->
+                <div class="fighter-card" id="ai-card">
+                    <div class="fighter-tag">DEALER</div>
+                    <div class="fighter-hp">
+                        <div class="hp-bar"><div class="hp-fill" id="ai-hp-fill"></div></div>
+                        <div class="hp-num" id="ai-hp-text">2/2</div>
+                    </div>
+                    <div class="fighter-status" id="ai-status"></div>
+                </div>
+            </section>
+
+            <!-- Reveal -->
+            <div id="reveal-box" class="reveal-box hidden">
+                <span id="reveal-text"></span>
+            </div>
+
+            <!-- Itens -->
+            <section class="items-panel" id="items-panel">
+                <div class="panel-label">INVENTÁRIO</div>
+                <div class="items-row" id="player-items"></div>
+            </section>
+
+            <!-- Ações -->
+            <section class="actions-panel" id="actions-panel">
+                <button id="btn-shoot-ai" class="btn-action btn-attack" disabled>
+                    <span class="btn-action-icon">⊕</span>
+                    <span class="btn-action-label">ATIRAR NO DEALER</span>
+                </button>
+                <button id="btn-shoot-self" class="btn-action btn-self-shoot" disabled>
+                    <span class="btn-action-icon">↺</span>
+                    <span class="btn-action-label">ATIRAR EM SI</span>
+                </button>
+            </section>
+
+            <!-- Log -->
+            <section class="log-panel">
+                <div class="log-bar">
+                    <span>LOG</span>
+                    <button id="btn-clear-log" class="btn-tiny">LIMPAR</button>
+                </div>
+                <div class="log-body" id="event-log">
+                    <div class="log-line log-sys">Aguardando início…</div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <!-- ============ FIM DE RODADA ============ -->
+    <div id="screen-round-end" class="screen">
+        <div class="overlay-box">
+            <div class="overlay-icon" id="round-end-icon">◉</div>
+            <h2 id="round-end-title">FIM DA RODADA</h2>
+            <p id="round-end-message"></p>
+            <div class="overlay-score" id="round-end-score"></div>
+            <button id="btn-next-round" class="btn-primary">PRÓXIMA RODADA →</button>
+        </div>
+    </div>
+
+    <!-- ============ FIM DE JOGO ============ -->
+    <div id="screen-game-over" class="screen">
+        <div class="overlay-box">
+            <div class="overlay-icon large" id="gameover-icon"></div>
+            <h2 id="gameover-title"></h2>
+            <p id="gameover-message"></p>
+            <div class="overlay-score" id="gameover-score"></div>
+            <button id="btn-restart" class="btn-primary btn-large">↻ JOGAR NOVAMENTE</button>
+        </div>
+    </div>
+
+    <!-- Notificação flutuante -->
+    <div id="notification" class="notif hidden">
+        <span id="notification-text"></span>
+    </div>
+
+    <script src="js/items.js"></script>
+    <script src="js/ai.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/game.js"></script>
+</body>
+</html>
